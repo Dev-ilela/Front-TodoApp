@@ -16,7 +16,7 @@ export class AppComponent {
   apiURL : string;
 
   constructor(private http: HttpClient) {
-    this.apiURL = 'http://localhost:5000';
+    this.apiURL = 'https://back-todoapp-5e0l.onrender.com';
     this.READ_tarefas();
   }
 
