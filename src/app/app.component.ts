@@ -1,4 +1,4 @@
- import { Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { Tarefa } from "./tarefa";
 import { HttpClient } from '@angular/common/http';
 
@@ -13,31 +13,33 @@ export class AppComponent {
   title = 'TODOapp';
 
   arrayDeTarefas: Tarefa[] = [];
-  apiURL : string;
+  apiURL: string;
 
   constructor(private http: HttpClient) {
     this.apiURL = 'https://back-todoapp-5e0l.onrender.com';
-    this.READ_tarefas();
+  }
+
+  ngOnInit(): void {
+    this.READ_tarefas(); 
   }
 
   CREATE_tarefa(descricaoNovaTarefa: string) {
     var novaTarefa = new Tarefa(descricaoNovaTarefa, false);
     this.http.post<Tarefa>(`${this.apiURL}/api/post`, novaTarefa).subscribe(
-    resultado => { console.log(resultado); this.READ_tarefas(); });
-     
-  }   
+      resultado => { console.log(resultado); this.READ_tarefas(); });
+
+  }
 
   READ_tarefas() {
     this.http.get<Tarefa[]>(`${this.apiURL}/api/getAll`).subscribe(
-    resultado => this.arrayDeTarefas=resultado);
+      resultado => this.arrayDeTarefas = resultado);
   }
 
-  DELETE_tarefa(tarefaAserRemovida: Tarefa)
-  {
+  DELETE_tarefa(tarefaAserRemovida: Tarefa) {
     var indice = this.arrayDeTarefas.indexOf(tarefaAserRemovida);
     var id = this.arrayDeTarefas[indice]._id;
     this.http.delete<Tarefa>(`${this.apiURL}/api/delete/${id}`).subscribe(
-    resultado => { console.log(resultado); this.READ_tarefas(); });
+      resultado => { console.log(resultado); this.READ_tarefas(); });
 
   }
 
@@ -45,10 +47,10 @@ export class AppComponent {
     var indice = this.arrayDeTarefas.indexOf(tarefaAserModificada);
     var id = this.arrayDeTarefas[indice]._id;
     this.http.patch<Tarefa>(`${this.apiURL}/api/update/${id}`,
-    tarefaAserModificada).subscribe(
-    resultado => { console.log(resultado); this.READ_tarefas(); });
-   }
-   
+      tarefaAserModificada).subscribe(
+        resultado => { console.log(resultado); this.READ_tarefas(); });
+  }
+
 }
 
 
