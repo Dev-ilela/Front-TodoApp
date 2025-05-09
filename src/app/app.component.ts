@@ -17,6 +17,7 @@ export class AppComponent implements OnInit{
 
   constructor(private http: HttpClient) {
     this.apiURL = 'https://back-todoapp-5e0l.onrender.com';
+    this.READ_tarefas(); 
   }
 
   ngOnInit(): void {
