@@ -1,4 +1,4 @@
-import { Component,  Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Tarefa } from "../tarefa";
 
 @Component({
@@ -7,15 +7,9 @@ import { Tarefa } from "../tarefa";
   templateUrl: './item.component.html',
   styleUrl: './item.component.css'
 })
-
 export class ItemComponent {
-  emEdicao = false;
+  emEdicao =false;
   @Input() tarefa: Tarefa = new Tarefa("", false);
-  @Output() remove = new EventEmitter();
+  @Output() removeTarefa = new EventEmitter();
   @Output() modificaTarefa = new EventEmitter();
-
-
-  onRemover() {
-    this.remove.emit(); 
-  }
 }
