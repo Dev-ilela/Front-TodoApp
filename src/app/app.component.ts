@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Tarefa } from "./tarefa";
 import { HttpClient } from '@angular/common/http';
-
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +9,7 @@ import { HttpClient } from '@angular/common/http';
   standalone: false,
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit {
   title = 'TODOapp';
 
   arrayDeTarefas: Tarefa[] = [];
@@ -20,42 +20,37 @@ export class AppComponent implements OnInit{
     this.READ_tarefas(); 
   }
 
-  ngOnInit(): void {
-    var novaTarefa = new Tarefa('TESTE', false);
-    this.http.post<Tarefa>(`${this.apiURL}/api/post`, novaTarefa).subscribe(
-      resultado => { console.log(resultado); this.READ_tarefas(); });
-
-    this.READ_tarefas(); 
+  async ngOnInit(): Promise<void> {
+    const novaTarefa = new Tarefa('TESTE', false);
+    await firstValueFrom(this.http.post<Tarefa>(`${this.apiURL}/api/post`, novaTarefa));
+    await this.READ_tarefas(); 
   }
 
-  CREATE_tarefa(descricaoNovaTarefa: string) {
-    var novaTarefa = new Tarefa(descricaoNovaTarefa, false);
-    this.http.post<Tarefa>(`${this.apiURL}/api/post`, novaTarefa).subscribe(
-      resultado => { console.log(resultado); this.READ_tarefas(); });
-
+  async CREATE_tarefa(descricaoNovaTarefa: string): Promise<void> {
+    const novaTarefa = new Tarefa(descricaoNovaTarefa, false);
+    await firstValueFrom(this.http.post<Tarefa>(`${this.apiURL}/api/post`, novaTarefa));
+    await this.READ_tarefas();
   }
 
-  READ_tarefas() {
-    this.http.get<Tarefa[]>(`${this.apiURL}/api/getAll`).subscribe(
-      resultado => this.arrayDeTarefas = resultado);
+  async READ_tarefas(): Promise<void> {
+    this.arrayDeTarefas = await firstValueFrom(
+      this.http.get<Tarefa[]>(`${this.apiURL}/api/getAll`)
+    );
   }
 
-  DELETE_tarefa(tarefaAserRemovida: Tarefa) {
-    var indice = this.arrayDeTarefas.indexOf(tarefaAserRemovida);
-    var id = this.arrayDeTarefas[indice]._id;
-    this.http.delete<Tarefa>(`${this.apiURL}/api/delete/${id}`).subscribe(
-      resultado => { console.log(resultado); this.READ_tarefas(); });
-
+  async DELETE_tarefa(tarefaAserRemovida: Tarefa): Promise<void> {
+    const indice = this.arrayDeTarefas.indexOf(tarefaAserRemovida);
+    const id = this.arrayDeTarefas[indice]._id;
+    await firstValueFrom(this.http.delete<Tarefa>(`${this.apiURL}/api/delete/${id}`));
+    await this.READ_tarefas();
   }
 
-  UPDATE_tarefa(tarefaAserModificada: Tarefa) {
-    var indice = this.arrayDeTarefas.indexOf(tarefaAserModificada);
-    var id = this.arrayDeTarefas[indice]._id;
-    this.http.patch<Tarefa>(`${this.apiURL}/api/update/${id}`,
-      tarefaAserModificada).subscribe(
-        resultado => { console.log(resultado); this.READ_tarefas(); });
+  async UPDATE_tarefa(tarefaAserModificada: Tarefa): Promise<void> {
+    const indice = this.arrayDeTarefas.indexOf(tarefaAserModificada);
+    const id = this.arrayDeTarefas[indice]._id;
+    await firstValueFrom(
+      this.http.patch<Tarefa>(`${this.apiURL}/api/update/${id}`, tarefaAserModificada)
+    );
+    await this.READ_tarefas();
   }
-
 }
-
-
