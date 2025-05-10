@@ -21,6 +21,10 @@ export class AppComponent implements OnInit{
   }
 
   ngOnInit(): void {
+    var novaTarefa = new Tarefa('TESTE', false);
+    this.http.post<Tarefa>(`${this.apiURL}/api/post`, novaTarefa).subscribe(
+      resultado => { console.log(resultado); this.READ_tarefas(); });
+
     this.READ_tarefas(); 
   }
 
